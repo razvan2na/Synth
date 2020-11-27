@@ -1,0 +1,137 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using NAudio.Wave.SampleProviders;
+
+namespace Synth {
+	public partial class MainWindow : Window {
+		private readonly Controller controller;
+
+		private readonly List<Key> keyboard = new List<Key> {
+			Key.Z, Key.S, Key.X, Key.D, Key.C, Key.V, Key.G, Key.B, Key.H, Key.N, Key.J, Key.M,
+			Key.Q, Key.D2, Key.W, Key.D3, Key.E, Key.R, Key.D5, Key.T, Key.D6, Key.Y, Key.D7, Key.U
+		};
+		
+		private enum KeyButtons {
+			C1, CS1, D1, DS1, E1, F1, FS1, G1, GS1, A1, AS1, B1,
+			C2, CS2, D2, DS2, E2, F2, FS2, G2, GS2, A2, AS2, B2
+		}
+
+		public MainWindow()
+		{
+			controller = new Controller();
+			InitializeComponent();
+			DataContext = this;
+		}
+		
+		private void OnKeyDown(object sender, KeyEventArgs e) {
+			var keyIndex = keyboard.IndexOf(e.Key);
+			controller.NoteDown(keyIndex);
+		}
+
+		private void OnKeyUp(object sender, KeyEventArgs e) {
+			var keyIndex = keyboard.IndexOf(e.Key);
+			controller.NoteUp(keyIndex);
+		}
+		
+		private void OnScreenKeyDown(object sender, MouseButtonEventArgs e) {
+			var key = (sender as Button)?.Name;
+			var keyIndex = (int) Enum.Parse(typeof(KeyButtons), key ?? "C1");
+			controller.NoteDown(keyIndex);
+		}
+		
+		private void OnScreenKeyUp(object sender, MouseButtonEventArgs e) {
+			var key = (sender as Button)?.Name;
+			var keyIndex = (int) Enum.Parse(typeof(KeyButtons), key ?? "C1");
+			controller.NoteUp(keyIndex);
+		}
+		
+		private void OnOsc1EnableCheck(object sender, RoutedEventArgs e) {
+			controller.Osc1Enable = true;
+		}
+		
+		private void OnOsc1EnableUncheck(object sender, RoutedEventArgs e) {
+			controller.Osc1Enable = false;
+		}
+		
+		private void OnOsc2EnableCheck(object sender, RoutedEventArgs e) {
+			controller.Osc2Enable = true;
+		}
+		
+		private void OnOsc2EnableUncheck(object sender, RoutedEventArgs e) {
+			controller.Osc2Enable = false;
+		}
+
+		private void OnOsc1VolumeChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Osc1Volume = (float) SliderOsc1Volume.Value;
+			LabelOsc1Volume.Content = $"Volume: {(int)(controller.Osc1Volume * 100.0)}%";
+		}
+		
+		private void OnOsc1WaveformSelectionChange(object sender, SelectionChangedEventArgs selectionChangedEventArgs) {
+			var selectedItem = ComboBoxOsc1Waveform?.SelectedItem as ComboBoxItem;
+			var content = selectedItem?.Content.ToString();
+			controller.Osc1Waveform = (SignalType) Enum.Parse(typeof(SignalType), content ?? "Sine");
+		}
+
+		private void OnOsc1OctaveChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Osc1Octave = (int) SliderOsc1Octave.Value;
+			LabelOsc1Octave.Content = $"Octave: {controller.Osc1Octave} - {controller.Osc1Octave + 1}";
+		}
+		
+		private void OnOsc2VolumeChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Osc2Volume = (float) SliderOsc2Volume.Value;
+			LabelOsc2Volume.Content = $"Volume: {(int)(controller.Osc2Volume * 100.0)}%";
+		}
+		
+		private void OnOsc2WaveformSelectionChange(object sender, SelectionChangedEventArgs selectionChangedEventArgs) {
+			var selectedItem = ComboBoxOsc2Waveform?.SelectedItem as ComboBoxItem;
+			var content = selectedItem?.Content.ToString();
+			controller.Osc2Waveform = (SignalType) Enum.Parse(typeof(SignalType), content ?? "Sine");
+		}
+
+		private void OnOsc2OctaveChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Osc2Octave = (int) SliderOsc2Octave.Value;
+			LabelOsc2Octave.Content = $"Octave: {controller.Osc2Octave} - {controller.Osc2Octave + 1}";
+		}
+
+		private void OnAttackChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Attack = (float) SliderAttack.Value;
+			LabelAttack.Content = $"{(int)(controller.Attack * 1000)}ms";
+		}
+
+		private void OnDecayChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Decay = (float) SliderDecay.Value;
+			LabelDecay.Content = $"{(int)(controller.Decay * 1000)}ms";
+		}
+
+		private void OnSustainChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Sustain = (float) SliderSustain.Value;
+			LabelSustain.Content = $"{(int)(controller.Sustain * 100)}%";
+		}
+
+		private void OnReleaseChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Release = (float) SliderRelease.Value;
+			LabelRelease.Content = $"{(int)(controller.Release * 1000)}ms";
+		}
+		
+		private void OnFilterEnableCheck(object sender, RoutedEventArgs e) {
+			controller.FilterEnable = true;
+		}
+		
+		private void OnFilterEnableUncheck(object sender, RoutedEventArgs e) {
+			controller.FilterEnable = false;
+		}
+
+		private void OnCutoffChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Cutoff = (int) SliderFilterCutoff.Value;
+			LabelFilterCutoff.Content = $"{controller.Cutoff}Hz";
+		}
+
+		private void OnSharpnessChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Sharpness = (float) SliderFilterSharpness.Value;
+			LabelFilterSharpness.Content = $"{controller.Sharpness}";
+		}
+	}
+}

@@ -1,0 +1,358 @@
+﻿<Window x:Class="Synth.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Synth"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="700" Width="600" ResizeMode="CanMinimize"
+        KeyDown="OnKeyDown"
+        KeyUp="OnKeyUp">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!-- Oscillator 1 -->
+        <GroupBox Grid.Row="0" Grid.Column="0" 
+                  Header="Oscillator 1">
+	        <Grid>
+		        <Grid.RowDefinitions>
+			        <RowDefinition/>
+			        <RowDefinition/>
+			        <RowDefinition/>
+			        <RowDefinition/>
+			        <RowDefinition/>
+			        <RowDefinition/>
+			        <RowDefinition/>
+		        </Grid.RowDefinitions>
+		        
+		        <!-- Enable -->
+		        <CheckBox Grid.Row="0" 
+		                  IsChecked="True"
+		                  Content="Enable"
+		                  Checked="OnOsc1EnableCheck"
+		                  Unchecked="OnOsc1EnableUncheck"/>
+		        
+		        <!-- Volume -->
+		        <Label Name="LabelOsc1Volume"
+		               Grid.Row="1"
+		               Content="Volume:"/>
+		        <Slider Name="SliderOsc1Volume" 
+		                Grid.Row="2"
+		                Minimum="0" Maximum="1" Value="0.25"
+		                ValueChanged="OnOsc1VolumeChange"/>
+		        
+		        <!-- Waveform -->
+		        <Label Grid.Row="3"
+		               Content="Waveform:"/>
+		        <ComboBox Name="ComboBoxOsc1Waveform" 
+		                  Grid.Row="4" 
+		                  SelectedIndex="0"
+		                  SelectionChanged="OnOsc1WaveformSelectionChange">
+			        <ComboBoxItem>Sine</ComboBoxItem>
+			        <ComboBoxItem>Square</ComboBoxItem>
+			        <ComboBoxItem>Triangle</ComboBoxItem>
+			        <ComboBoxItem>Sawtooth</ComboBoxItem>
+		        </ComboBox>
+		        
+		        <!-- Octave -->
+		        <Label Name="LabelOsc1Octave"
+		               Grid.Row="5"
+		               Content="Octave:"/>
+		        <Slider Name = "SliderOsc1Octave"
+		                Grid.Row="6"
+		                Minimum="0" Maximum="7" TickPlacement="BottomRight" IsSnapToTickEnabled="True" TickFrequency="1"
+		                Value="3"
+		                ValueChanged="OnOsc1OctaveChange"/>
+	        </Grid>
+        </GroupBox>
+        
+        <!-- Oscillator 2 -->
+        <GroupBox Grid.Row="1" Grid.Column="0" 
+                  Header="Oscillator 2">
+	        <Grid>
+		        <Grid.RowDefinitions>
+			        <RowDefinition/>
+			        <RowDefinition/>
+			        <RowDefinition/>
+			        <RowDefinition/>
+			        <RowDefinition/>
+			        <RowDefinition/>
+			        <RowDefinition/>
+		        </Grid.RowDefinitions>
+		        
+		        <!-- Enable -->
+		        <CheckBox Grid.Row="0" 
+		                  Content="Enable"
+		                  Checked="OnOsc2EnableCheck"
+		                  Unchecked="OnOsc2EnableUncheck"/>
+		        
+		        <!-- Volume -->
+		        <Label Name="LabelOsc2Volume"
+		               Grid.Row="1"
+		               Content="Volume:"/>
+		        <Slider Name="SliderOsc2Volume" 
+		                Grid.Row="2"
+		                Minimum="0" Maximum="1" Value="0.25"
+		                ValueChanged="OnOsc2VolumeChange"/>
+		        
+		        <!-- Waveform -->
+		        <Label Grid.Row="3"
+		               Content="Waveform:"/>
+		        <ComboBox Name="ComboBoxOsc2Waveform" 
+		                  Grid.Row="4" 
+		                  SelectedIndex="0"
+		                  SelectionChanged="OnOsc2WaveformSelectionChange">
+			        <ComboBoxItem>Sine</ComboBoxItem>
+			        <ComboBoxItem>Square</ComboBoxItem>
+			        <ComboBoxItem>Triangle</ComboBoxItem>
+			        <ComboBoxItem>Sawtooth</ComboBoxItem>
+		        </ComboBox>
+		        
+		        <!-- Octave -->
+		        <Label Name="LabelOsc2Octave"
+		               Grid.Row="5"
+		               Content="Octave:"/>
+		        <Slider Name = "SliderOsc2Octave"
+		                Grid.Row="6"
+		                Minimum="0" Maximum="7" TickPlacement="BottomRight" IsSnapToTickEnabled="True" TickFrequency="1"
+		                Value="3"
+		                ValueChanged="OnOsc2OctaveChange"/>
+	        </Grid>
+        </GroupBox>
+        
+        <!-- Envelope -->
+        <GroupBox Grid.Row="0" Grid.Column="1" 
+                  Header="Envelope">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                
+                <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"
+                       Content="Attack"/>
+                <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"
+                       Content="Decay"/>
+                <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"
+                       Content="Sustain"/>
+                <Label Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center"
+                       Content="Release"/>
+                
+                <Label Name="LabelAttack"
+                       Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center"
+                       Content="-"/>
+                <Label Name="LabelDecay"
+                       Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center"
+                       Content="-"/>
+                <Label Name="LabelSustain"
+                       Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"
+                       Content="-"/>
+                <Label Name="LabelRelease"
+                       Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center"
+                       Content="-"/>
+                
+                <Slider Name="SliderAttack" 
+                        Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center"
+                        Orientation="Vertical"
+                        Minimum="0.01" Maximum="4" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0.01"
+                        ValueChanged="OnAttackChange"/>
+                <Slider Name="SliderDecay" 
+                        Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center"
+                        Orientation="Vertical"
+                        Minimum="0" Maximum="4" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0"
+                        ValueChanged="OnDecayChange"/>
+                <Slider Name="SliderSustain"
+                        Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"
+                        Orientation="Vertical"
+                        Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="1"
+                        ValueChanged="OnSustainChange"/>
+                <Slider Name="SliderRelease"
+                        Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center"
+                        Orientation="Vertical"
+                        Minimum="0.3" Maximum="4" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0.3"
+                        ValueChanged="OnReleaseChange"/>
+            </Grid>
+        </GroupBox>
+        
+        <!-- Filter -->
+        <GroupBox Grid.Row="1" Grid.Column="1" 
+                  Header="Filter">
+            <Grid>
+	            <Grid.RowDefinitions>
+		            <RowDefinition/>
+		            <RowDefinition/>
+		            <RowDefinition/>
+	            </Grid.RowDefinitions>
+	            
+	            <Grid.ColumnDefinitions>
+		            <ColumnDefinition/>
+		            <ColumnDefinition/>
+		            <ColumnDefinition/>
+	            </Grid.ColumnDefinitions>
+	            
+	            <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+	                      Content="Enable"
+	                      Checked="OnFilterEnableCheck" Unchecked="OnFilterEnableUncheck"/>
+	            
+	            <Label Grid.Row="1" Grid.Column="0"
+	                   Content="Cutoff"/>
+	            <Label Grid.Row="2" Grid.Column="0"
+	                   Content="Sharpness"/>
+	            
+	            <Label Name="LabelFilterCutoff"
+	                   Grid.Row="1" Grid.Column="2"
+	                   Content="-"/>
+	            <Label Name="LabelFilterSharpness"
+	                   Grid.Row="2" Grid.Column="2"
+	                   Content="-"/>
+	            
+	            <Slider Name="SliderFilterCutoff"
+						Grid.Row="1" Grid.Column="1"
+	                    Minimum="20" Maximum="20000" IsSnapToTickEnabled="True" TickFrequency="100" Value="8000"
+						ValueChanged="OnCutoffChange"/>
+	            <Slider Name="SliderFilterSharpness"
+	                    Grid.Row="2" Grid.Column="1"
+	                    Minimum="0.01" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0.5"
+	                    ValueChanged="OnSharpnessChange"/>
+            </Grid>
+        </GroupBox>
+        
+        <!-- Keyboard -->
+        <GroupBox Grid.Row="2" 
+                  Grid.Column="0" 
+                  Grid.ColumnSpan="2" 
+                  Header="Keyboard">
+            <Grid>
+	            <!-- 3 rows -->
+	            <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+	            <!-- 28 columns -->
+                <Grid.ColumnDefinitions> 
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions> 
+                    
+	            <!-- White keys -->
+	            <Button Name="C1" Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+	                    Background="White"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="D1" Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="E1" Grid.Row="0" Grid.Column="4" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="F1" Grid.Row="0" Grid.Column="6" Grid.RowSpan="3" Grid.ColumnSpan="2"
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="G1" Grid.Row="0" Grid.Column="8" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="A1" Grid.Row="0" Grid.Column="10" Grid.RowSpan="3" Grid.ColumnSpan="2"
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="B1" Grid.Row="0" Grid.Column="12" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="C2" Grid.Row="0" Grid.Column="14" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="D2" Grid.Row="0" Grid.Column="16" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="E2" Grid.Row="0" Grid.Column="18" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="F2" Grid.Row="0" Grid.Column="20" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="G2" Grid.Row="0" Grid.Column="22" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="A2" Grid.Row="0" Grid.Column="24" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="B2" Grid.Row="0" Grid.Column="26" Grid.RowSpan="3" Grid.ColumnSpan="2" 
+                        Background="White"
+                        PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                
+	            <!-- Black keys -->
+	            <Button Name="CS1" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
+	                    HorizontalAlignment="Center" Background="Black" Width="30"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="DS1" Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" Grid.ColumnSpan="2"
+	                    HorizontalAlignment="Center" Background="Black" Width="30"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="FS1" Grid.Row="0" Grid.Column="7" Grid.RowSpan="2" Grid.ColumnSpan="2"
+	                    HorizontalAlignment="Center" Background="Black" Width="30"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="GS1" Grid.Row="0" Grid.Column="9" Grid.RowSpan="2" Grid.ColumnSpan="2"
+	                    HorizontalAlignment="Center" Background="Black" Width="30"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="AS1" Grid.Row="0" Grid.Column="11" Grid.RowSpan="2" Grid.ColumnSpan="2"
+	                    HorizontalAlignment="Center" Background="Black" Width="30"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="CS2" Grid.Row="0" Grid.Column="15" Grid.RowSpan="2" Grid.ColumnSpan="2"
+	                    HorizontalAlignment="Center" Background="Black" Width="30"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="DS2" Grid.Row="0" Grid.Column="17" Grid.RowSpan="2" Grid.ColumnSpan="2"
+	                    HorizontalAlignment="Center" Background="Black" Width="30"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="FS2" Grid.Row="0" Grid.Column="21" Grid.RowSpan="2" Grid.ColumnSpan="2"
+	                    HorizontalAlignment="Center" Background="Black" Width="30"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="GS2" Grid.Row="0" Grid.Column="23" Grid.RowSpan="2" Grid.ColumnSpan="2"
+	                    HorizontalAlignment="Center" Background="Black" Width="30"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+                <Button Name="AS2" Grid.Row="0" Grid.Column="25" Grid.RowSpan="2" Grid.ColumnSpan="2"
+	                    HorizontalAlignment="Center" Background="Black" Width="30"
+	                    PreviewMouseDown="OnScreenKeyDown" PreviewMouseUp="OnScreenKeyUp"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
