@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Input;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using Synth.Filter;
 
 namespace Synth {
 	public class Controller {
 		public bool Osc1Enable {
-			get => osc1Enable;
 			set {
 				osc1Enable = value;
 				CheckEnable();
@@ -14,14 +13,13 @@ namespace Synth {
 		}
 
 		public bool Osc2Enable {
-			get => osc2Enable;
 			set {
 				osc2Enable = value;
 				CheckEnable();
 			}
 		}
 
-		public bool FilterEnable { get; set; } = false;
+		public bool FilterEnable { get; set; }
 		public float Osc1Volume {
 			get => volumeControl1?.Volume ?? 0.25f;
 			set => volumeControl1.Volume = value;
@@ -36,13 +34,15 @@ namespace Synth {
 
 		public SignalType Osc2Waveform { get; set; } = SignalType.Sine;
 
+		public FilterType FilterType { get; set; } = FilterType.LowPass;
+
 		public int Osc1Octave { get; set; } = 3;
 
 		public int Osc2Octave { get; set; } = 3;
 
 		public float Attack { get; set; } = 0.01f;
 
-		public float Decay { get; set; } = 0;
+		public float Decay { get; set; }
 
 		public float Sustain { get; set; } = 1;
 
@@ -50,7 +50,7 @@ namespace Synth {
 
 		public int Cutoff { get; set; } = 8000;
 
-		public float Sharpness { get; set; } = 0.5f;
+		public float Bandwidth { get; set; } = 0.5f;
 
 		private bool osc1Enable;
 		private bool osc2Enable;
@@ -105,7 +105,7 @@ namespace Synth {
 			if (osc1Enable) {
 				ISampleProvider input1 = signals[0, keyIndex];
 				if (FilterEnable)
-					input1 = new LowPassFilter(input1, Cutoff, Sharpness);
+					input1 = new FilterControl(input1, FilterType, Cutoff, Bandwidth);
 				
 				mixer1.AddMixerInput(input1);
 			}
@@ -113,7 +113,7 @@ namespace Synth {
 			if (osc2Enable) {
 				ISampleProvider input2 = signals[1, keyIndex];
 				if (FilterEnable)
-					input2 = new LowPassFilter(input2, Cutoff, Sharpness);
+					input2 = new FilterControl(input2, FilterType, Cutoff, Bandwidth);
 				
 				mixer2.AddMixerInput(input2);
 			}

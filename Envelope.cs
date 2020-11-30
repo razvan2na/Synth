@@ -2,8 +2,8 @@
 
 namespace Synth {
 	public class Envelope {
-		private const float ATTACK_RATIO = 0.3f;
-		private const float DECAY_RATIO = 0.0001f;
+		private const float AttackRatio = 0.3f;
+		private const float DecayRatio = 0.0001f;
 		
 		public enum EnvelopeState {
 			Idle = 0, Attack, Decay, Sustain, Release
@@ -15,8 +15,8 @@ namespace Synth {
 			get => attackRate;
 			set {
 				attackRate = value;
-				attackCoef = ComputeCoeficient(value, ATTACK_RATIO);
-				attackBase = (1f + ATTACK_RATIO) * (1f - attackCoef);
+				attackCoefficient = ComputeCoeficient(value, AttackRatio);
+				attackBase = (1f + AttackRatio) * (1f - attackCoefficient);
 			}
 		}
         
@@ -24,8 +24,8 @@ namespace Synth {
 			get => decayRate;
 			set {
 				decayRate = value;
-				decayCoef = ComputeCoeficient(value, DECAY_RATIO);
-				decayBase = (sustainLevel - DECAY_RATIO) * (1f - decayCoef);
+				decayCoefficient = ComputeCoeficient(value, DecayRatio);
+				decayBase = (sustainLevel - DecayRatio) * (1f - decayCoefficient);
 			}
 		}
 		
@@ -33,7 +33,7 @@ namespace Synth {
 			get => sustainLevel;
 			set {
 				sustainLevel = value;
-				decayBase = (sustainLevel - DECAY_RATIO) * (1f - decayCoef);
+				decayBase = (sustainLevel - DecayRatio) * (1f - decayCoefficient);
 			}
 		}
         
@@ -41,8 +41,8 @@ namespace Synth {
 			get => releaseRate;
 			set {
 				releaseRate = value;
-				releaseCoef = ComputeCoeficient(value, DECAY_RATIO);
-				releaseBase = -DECAY_RATIO * (1f - releaseCoef);
+				releaseCoefficient = ComputeCoeficient(value, DecayRatio);
+				releaseBase = -DecayRatio * (1f - releaseCoefficient);
 			}
 		}
 		
@@ -50,9 +50,9 @@ namespace Synth {
         private float attackRate;
         private float decayRate;
         private float releaseRate;
-        private float attackCoef;
-        private float decayCoef;
-        private float releaseCoef;
+        private float attackCoefficient;
+        private float decayCoefficient;
+        private float releaseCoefficient;
         private float attackBase;
         private float decayBase;
         private float releaseBase;
@@ -72,7 +72,7 @@ namespace Synth {
             switch (State) {
                 case EnvelopeState.Idle: break;
                 case EnvelopeState.Attack:
-                    output = attackBase + output * attackCoef;
+                    output = attackBase + output * attackCoefficient;
                     
                     if (output >= 1f) {
                         output = 1f;
@@ -81,7 +81,7 @@ namespace Synth {
                     
                     break;
                 case EnvelopeState.Decay:
-                    output = decayBase + output * decayCoef;
+                    output = decayBase + output * decayCoefficient;
                     
                     if (output <= sustainLevel) {
                         output = sustainLevel;
@@ -91,7 +91,7 @@ namespace Synth {
                     break;
                 case EnvelopeState.Sustain: break;
                 case EnvelopeState.Release:
-                    output = releaseBase + output * releaseCoef;
+                    output = releaseBase + output * releaseCoefficient;
                     
                     if (output <= 0f) {
                         output = 0f;

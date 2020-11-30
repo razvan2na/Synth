@@ -198,6 +198,7 @@
 		            <RowDefinition/>
 		            <RowDefinition/>
 		            <RowDefinition/>
+		            <RowDefinition/>
 	            </Grid.RowDefinitions>
 	            
 	            <Grid.ColumnDefinitions>
@@ -210,26 +211,35 @@
 	                      Content="Enable"
 	                      Checked="OnFilterEnableCheck" Unchecked="OnFilterEnableUncheck"/>
 	            
-	            <Label Grid.Row="1" Grid.Column="0"
-	                   Content="Cutoff"/>
+	            <ComboBox Name="ComboBoxFilterType" 
+	                      Grid.Row="1" Grid.Column="0" 
+	                      SelectedIndex="0"
+	                      SelectionChanged="OnFilterTypeSelectionChange">
+		            <ComboBoxItem>LowPass</ComboBoxItem>
+		            <ComboBoxItem>HighPass</ComboBoxItem>
+		            <ComboBoxItem>Notch</ComboBoxItem>
+	            </ComboBox>
+	            
 	            <Label Grid.Row="2" Grid.Column="0"
-	                   Content="Sharpness"/>
+	                   Content="Cutoff"/>
+	            <Label Grid.Row="3" Grid.Column="0"
+	                   Content="Bandwidth"/>
 	            
 	            <Label Name="LabelFilterCutoff"
-	                   Grid.Row="1" Grid.Column="2"
-	                   Content="-"/>
-	            <Label Name="LabelFilterSharpness"
 	                   Grid.Row="2" Grid.Column="2"
+	                   Content="-"/>
+	            <Label Name="LabelFilterBandwidth"
+	                   Grid.Row="3" Grid.Column="2"
 	                   Content="-"/>
 	            
 	            <Slider Name="SliderFilterCutoff"
-						Grid.Row="1" Grid.Column="1"
+						Grid.Row="2" Grid.Column="1"
 	                    Minimum="20" Maximum="20000" IsSnapToTickEnabled="True" TickFrequency="100" Value="8000"
 						ValueChanged="OnCutoffChange"/>
-	            <Slider Name="SliderFilterSharpness"
-	                    Grid.Row="2" Grid.Column="1"
+	            <Slider Name="SliderFilterBandwidth"
+	                    Grid.Row="3" Grid.Column="1"
 	                    Minimum="0.01" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0.5"
-	                    ValueChanged="OnSharpnessChange"/>
+	                    ValueChanged="OnBandwidthChange"/>
             </Grid>
         </GroupBox>
         

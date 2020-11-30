@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NAudio.Wave.SampleProviders;
+using Synth.Filter;
 
 namespace Synth {
 	public partial class MainWindow : Window {
@@ -123,15 +123,21 @@ namespace Synth {
 		private void OnFilterEnableUncheck(object sender, RoutedEventArgs e) {
 			controller.FilterEnable = false;
 		}
+		
+		private void OnFilterTypeSelectionChange(object sender, SelectionChangedEventArgs selectionChangedEventArgs) {
+			var selectedItem = ComboBoxFilterType?.SelectedItem as ComboBoxItem;
+			var content = selectedItem?.Content.ToString();
+			controller.FilterType = (FilterType) Enum.Parse(typeof(FilterType), content ?? "LowPass");
+		}
 
 		private void OnCutoffChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
 			controller.Cutoff = (int) SliderFilterCutoff.Value;
 			LabelFilterCutoff.Content = $"{controller.Cutoff}Hz";
 		}
 
-		private void OnSharpnessChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
-			controller.Sharpness = (float) SliderFilterSharpness.Value;
-			LabelFilterSharpness.Content = $"{controller.Sharpness}";
+		private void OnBandwidthChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Bandwidth = (float) SliderFilterBandwidth.Value;
+			LabelFilterBandwidth.Content = $"{controller.Bandwidth}";
 		}
 	}
 }
