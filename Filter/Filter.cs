@@ -1,5 +1,3 @@
-using System;
-
 namespace Synth.Filter {
     public enum FilterType {
         LowPass, HighPass, Notch

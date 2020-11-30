@@ -1,12 +1,12 @@
 ﻿using System;
 using NAudio.Wave;
 
-namespace Synth {
+namespace Synth.Module {
 	public enum SignalType {
 		Sine, Square, Triangle, Sawtooth
 	}
 	
-	public class Signal : ISampleProvider
+	public class SignalModule : ISampleProvider
     {
 	    public WaveFormat WaveFormat { get; }
 	    public double Frequency { get; set; }
@@ -16,7 +16,7 @@ namespace Synth {
 	    private readonly double angular;
 	    private int nSample;
 
-	    public Signal(SignalType type = SignalType.Sine, double frequency = 440f) {
+	    public SignalModule(SignalType type = SignalType.Sine, double frequency = 440f) {
 	        WaveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 1);
 
 	        Type = type;

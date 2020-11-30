@@ -1,14 +1,14 @@
 ﻿using NAudio.Wave;
 
-namespace Synth {
-	public class VolumeControl : ISampleProvider {
+namespace Synth.Module {
+	public class VolumeModule : ISampleProvider {
 		public WaveFormat WaveFormat => source.WaveFormat;
 
 		public float Volume { get; set; } = 1f;
 		
 		private readonly ISampleProvider source;
 		
-		public VolumeControl(ISampleProvider source) {
+		public VolumeModule(ISampleProvider source) {
 			this.source = source;
 		}
 

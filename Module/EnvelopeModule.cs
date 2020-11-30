@@ -1,9 +1,7 @@
-﻿using System;
-using NAudio.Dsp;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 
-namespace Synth {
-	public class EnvelopeControl : ISampleProvider {
+namespace Synth.Module {
+	public class EnvelopeModule : ISampleProvider {
 		public WaveFormat WaveFormat => source.WaveFormat;
 		
 		public float AttackTime {
@@ -45,7 +43,7 @@ namespace Synth {
         private float sustainLevel;
         private float releaseTime;
         
-        public EnvelopeControl(ISampleProvider source, 
+        public EnvelopeModule(ISampleProvider source, 
 	        float attack = 0.01f, 
 	        float decay = 0f, 
 	        float sustain = 1f,

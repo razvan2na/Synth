@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using Synth.Filter;
+using Synth.Module;
 
 namespace Synth {
 	public class Controller {
@@ -55,11 +56,11 @@ namespace Synth {
 		private bool osc1Enable;
 		private bool osc2Enable;
 
-		private readonly EnvelopeControl[,] signals;
+		private readonly EnvelopeModule[,] signals;
 		private readonly MixingSampleProvider mixer1;
 		private readonly MixingSampleProvider mixer2;
-		private readonly VolumeControl volumeControl1;
-		private readonly VolumeControl volumeControl2;
+		private readonly VolumeModule volumeControl1;
+		private readonly VolumeModule volumeControl2;
 		private readonly MixingSampleProvider mixerAll;
 		private IWavePlayer player;
 		
@@ -77,11 +78,11 @@ namespace Synth {
 
 		public Controller() {
 			var waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 1);
-			signals = new EnvelopeControl[2, 24];
+			signals = new EnvelopeModule[2, 24];
 			mixer1 = new MixingSampleProvider(waveFormat) { ReadFully = true };
 			mixer2 = new MixingSampleProvider(waveFormat) { ReadFully = true };
-			volumeControl1 = new VolumeControl(mixer1);
-			volumeControl2 = new VolumeControl(mixer2);
+			volumeControl1 = new VolumeModule(mixer1);
+			volumeControl2 = new VolumeModule(mixer2);
 			mixerAll = new MixingSampleProvider(waveFormat) { ReadFully = true };
 
 			mixerAll.AddMixerInput(volumeControl1);
@@ -95,17 +96,17 @@ namespace Synth {
 			if (keyIndex < 0 || signals[0, keyIndex] != null || signals[1, keyIndex] != null) 
 				return;
 			
-			signals[0, keyIndex] = new EnvelopeControl(
-				new Signal(Osc1Waveform, frequencies[keyIndex + Osc1Octave * 12]),
+			signals[0, keyIndex] = new EnvelopeModule(
+				new SignalModule(Osc1Waveform, frequencies[keyIndex + Osc1Octave * 12]),
 				Attack, Decay, Sustain, Release);
-			signals[1, keyIndex] = new EnvelopeControl(
-				new Signal(Osc2Waveform, frequencies[keyIndex + Osc2Octave * 12]),
+			signals[1, keyIndex] = new EnvelopeModule(
+				new SignalModule(Osc2Waveform, frequencies[keyIndex + Osc2Octave * 12]),
 				Attack, Decay, Sustain, Release);
 
 			if (osc1Enable) {
 				ISampleProvider input1 = signals[0, keyIndex];
 				if (FilterEnable)
-					input1 = new FilterControl(input1, FilterType, Cutoff, Bandwidth);
+					input1 = new FilterModule(input1, FilterType, Cutoff, Bandwidth);
 				
 				mixer1.AddMixerInput(input1);
 			}
@@ -113,7 +114,7 @@ namespace Synth {
 			if (osc2Enable) {
 				ISampleProvider input2 = signals[1, keyIndex];
 				if (FilterEnable)
-					input2 = new FilterControl(input2, FilterType, Cutoff, Bandwidth);
+					input2 = new FilterModule(input2, FilterType, Cutoff, Bandwidth);
 				
 				mixer2.AddMixerInput(input2);
 			}

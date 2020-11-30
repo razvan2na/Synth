@@ -116,7 +116,7 @@ namespace Synth {
         }
         
         private static float ComputeCoeficient(float rate, float ratio)  {
-	        return (float)Math.Exp(-Math.Log((1f + ratio) / ratio) / rate);
+	        return (float) Math.Exp(-Math.Log((1f + ratio) / ratio) / rate);
         }
 	}
 }

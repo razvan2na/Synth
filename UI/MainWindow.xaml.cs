@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Synth.Filter;
+using Synth.Module;
 
 namespace Synth {
 	public partial class MainWindow : Window {

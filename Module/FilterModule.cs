@@ -2,18 +2,18 @@ using System;
 using NAudio.Wave;
 using Synth.Filter;
 
-namespace Synth {
-    public class FilterControl : ISampleProvider {
+namespace Synth.Module {
+    public class FilterModule : ISampleProvider {
         public WaveFormat WaveFormat => source.WaveFormat;
 
         private readonly ISampleProvider source;
         private readonly Filter.Filter filter;
 
-        public FilterControl(ISampleProvider source, FilterType type, int frequency = 3000, float bandwidth = 0.3f) {
+        public FilterModule(ISampleProvider source, FilterType type, int frequency = 3000, float bandwidth = 0.3f) {
             this.source = source;
             switch (type) {
                 case FilterType.LowPass:
-                    filter = new Filter.LowPassFilter(WaveFormat.SampleRate, frequency, bandwidth);
+                    filter = new LowPassFilter(WaveFormat.SampleRate, frequency, bandwidth);
                     break;
                 case FilterType.HighPass:
                     filter = new HighPassFilter(WaveFormat.SampleRate, frequency, bandwidth);
