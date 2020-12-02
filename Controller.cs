@@ -62,6 +62,7 @@ namespace Synth {
 		private readonly VolumeModule volumeControl1;
 		private readonly VolumeModule volumeControl2;
 		private readonly MixingSampleProvider mixerAll;
+		private readonly DelayModule delayModule;
 		private IWavePlayer player;
 		
 		private readonly List<double> frequencies = new List<double> {
@@ -84,6 +85,7 @@ namespace Synth {
 			volumeControl1 = new VolumeModule(mixer1);
 			volumeControl2 = new VolumeModule(mixer2);
 			mixerAll = new MixingSampleProvider(waveFormat) { ReadFully = true };
+			delayModule = new DelayModule(mixerAll);
 
 			mixerAll.AddMixerInput(volumeControl1);
 			mixerAll.AddMixerInput(volumeControl2);
@@ -142,7 +144,7 @@ namespace Synth {
 				return;
 			
 			player = new WaveOutEvent { NumberOfBuffers = 2, DesiredLatency = 100 };
-			player.Init(new SampleToWaveProvider(mixerAll));
+			player.Init(new SampleToWaveProvider(delayModule));
 			player.Play();
 		}
 
