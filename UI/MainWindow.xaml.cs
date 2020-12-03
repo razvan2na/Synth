@@ -17,7 +17,9 @@ namespace Synth {
 		
 		private enum KeyButtons {
 			C1, CS1, D1, DS1, E1, F1, FS1, G1, GS1, A1, AS1, B1,
-			C2, CS2, D2, DS2, E2, F2, FS2, G2, GS2, A2, AS2, B2
+			C2, CS2, D2, DS2, E2, F2, FS2, G2, GS2, A2, AS2, B2,
+			C3, CS3, D3, DS3, E3, F3, FS3, G3, GS3, A3, AS3, B3,
+			C4, CS4, D4, DS4, E4, F4, FS4, G4, GS4, A4, AS4, B4
 		}
 
 		public MainWindow()
@@ -29,24 +31,28 @@ namespace Synth {
 		
 		private void OnKeyDown(object sender, KeyEventArgs e) {
 			var keyIndex = keyboard.IndexOf(e.Key);
-			controller.NoteDown(keyIndex);
+			controller.NoteDown(
+				keyIndex + ((int) SliderOsc1Octave.Value + 2) * 12 + 3,
+				keyIndex + ((int) SliderOsc2Octave.Value + 2) * 12 + 3);
 		}
 
 		private void OnKeyUp(object sender, KeyEventArgs e) {
 			var keyIndex = keyboard.IndexOf(e.Key);
-			controller.NoteUp(keyIndex);
+			controller.NoteUp(
+				keyIndex + ((int) SliderOsc1Octave.Value + 2) * 12 + 3,
+				keyIndex + ((int) SliderOsc2Octave.Value + 2) * 12 + 3);
 		}
 		
 		private void OnScreenKeyDown(object sender, MouseButtonEventArgs e) {
 			var key = (sender as Button)?.Name;
 			var keyIndex = (int) Enum.Parse(typeof(KeyButtons), key ?? "C1");
-			controller.NoteDown(keyIndex);
+			controller.NoteDown(keyIndex + 15, keyIndex + 15);
 		}
 		
 		private void OnScreenKeyUp(object sender, MouseButtonEventArgs e) {
 			var key = (sender as Button)?.Name;
 			var keyIndex = (int) Enum.Parse(typeof(KeyButtons), key ?? "C1");
-			controller.NoteUp(keyIndex);
+			controller.NoteUp(keyIndex + 15, keyIndex + 15);
 		}
 		
 		private void OnOsc1EnableCheck(object sender, RoutedEventArgs e) {
@@ -78,7 +84,7 @@ namespace Synth {
 
 		private void OnOsc1OctaveChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
 			controller.Osc1Octave = (int) SliderOsc1Octave.Value;
-			LabelOsc1Octave.Content = $"Octave: {controller.Osc1Octave} - {controller.Osc1Octave + 1}";
+			LabelOsc1Octave.Content = $"Octave: {controller.Osc1Octave}";
 		}
 		
 		private void OnOsc2VolumeChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
@@ -94,7 +100,7 @@ namespace Synth {
 
 		private void OnOsc2OctaveChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
 			controller.Osc2Octave = (int) SliderOsc2Octave.Value;
-			LabelOsc2Octave.Content = $"Octave: {controller.Osc2Octave} - {controller.Osc2Octave + 1}";
+			LabelOsc2Octave.Content = $"Octave: {controller.Osc2Octave}";
 		}
 
 		private void OnAttackChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
