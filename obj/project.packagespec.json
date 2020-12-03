@@ -1,10 +1,10 @@
 ﻿{
   "version": "1.0.0",
   "restore": {
-    "projectUniqueName": "E:\\Projects\\Synth\\Synth.csproj",
+    "projectUniqueName": "D:\\University\\Synth\\Synth\\Synth.csproj",
     "projectName": "Synth",
-    "projectPath": "E:\\Projects\\Synth\\Synth.csproj",
-    "outputPath": "E:\\Projects\\Synth\\obj\\",
+    "projectPath": "D:\\University\\Synth\\Synth\\Synth.csproj",
+    "outputPath": "D:\\University\\Synth\\Synth\\obj\\",
     "projectStyle": "PackageReference",
     "originalTargetFrameworks": [
       "netcoreapp3.1"

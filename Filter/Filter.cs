@@ -15,11 +15,11 @@ namespace Synth.Filter {
         private float y1;
         private float y2;
 
-        public float Transform(float inSample) {
-            var result = A0 * inSample + A1 * x1 + A2 * x2 - A3 * y1 - A4 * y2;
+        public float Process(float sample) {
+            var result = A0 * sample + A1 * x1 + A2 * x2 - A3 * y1 - A4 * y2;
             
             x2 = x1;
-            x1 = inSample;
+            x1 = sample;
             
             y2 = y1;
             y1 = (float) result;

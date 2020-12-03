@@ -20,7 +20,21 @@ namespace Synth {
 			}
 		}
 
-		public bool FilterEnable { get; set; }
+		public bool FilterEnable {
+			get => filterModule?.Enabled ?? false;
+			set => filterModule.Enabled = value;
+		}
+
+		public bool TremoloEnable {
+			get => tremoloModule?.Enabled ?? false;
+			set => tremoloModule.Enabled = value;
+		}
+
+		public bool DelayEnable {
+			get => delayModule?.Enabled ?? false;
+			set => delayModule.Enabled = value;
+		}
+		
 		public float Osc1Volume {
 			get => volumeControl1?.Volume ?? 0.25f;
 			set => volumeControl1.Volume = value;
@@ -35,7 +49,10 @@ namespace Synth {
 
 		public SignalType Osc2Waveform { get; set; } = SignalType.Sine;
 
-		public FilterType FilterType { get; set; } = FilterType.LowPass;
+		public FilterType FilterType {
+			get => filterModule?.Type ?? FilterType.LowPass;
+			set => filterModule.Type = value;
+		}
 
 		public int Osc1Octave { get; set; } = 3;
 
@@ -49,9 +66,46 @@ namespace Synth {
 
 		public float Release { get; set; } = 0.3f;
 
-		public int Cutoff { get; set; } = 8000;
+		public int Cutoff {
+			get => filterModule?.Frequency ?? 8000;
+			set => filterModule.Frequency = value;
+		}
 
-		public float Bandwidth { get; set; } = 0.5f;
+		public float Bandwidth {
+			get => filterModule?.Bandwidth ?? 0.5f;
+			set => filterModule.Bandwidth = value;
+		}
+
+		public int TremoloFrequency {
+			get => tremoloModule?.Frequency ?? 5;
+			set => tremoloModule.Frequency = value;
+		}
+
+		public float TremoloAmplitude {
+			get => tremoloModule?.Amplitude ?? 0.2f;
+			set => tremoloModule.Amplitude = value;
+		}
+
+		public double Delay {
+			get => delayModule?.DelayMs ?? 1f;
+			set => delayModule.DelayMs = value;
+		}
+		public float Feedback {
+			get => delayModule?.Feedback ?? 0.5f;
+			set => delayModule.Feedback = value;
+		}
+		public float Mix {
+			get => delayModule?.Mix ?? 0.5f;
+			set => delayModule.Mix = value;
+		}
+		public float Wet {
+			get => delayModule?.OutputWet ?? 0.5f;
+			set => delayModule.OutputWet = value;
+		}
+		public float Dry {
+			get => delayModule?.OutputDry ?? 0.5f;
+			set => delayModule.OutputDry = value;
+		}
 
 		private bool osc1Enable;
 		private bool osc2Enable;
@@ -62,9 +116,11 @@ namespace Synth {
 		private readonly VolumeModule volumeControl1;
 		private readonly VolumeModule volumeControl2;
 		private readonly MixingSampleProvider mixerAll;
+		private readonly TremoloModule tremoloModule;
 		private readonly DelayModule delayModule;
+		private readonly FilterModule filterModule;
 		private IWavePlayer player;
-		
+
 		private readonly List<double> frequencies = new List<double> {
 			16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87, 
 			32.70, 34.65, 36.71, 38.89,	41.20, 43.65, 46.25, 49.00,	51.91, 55.00, 58.27, 61.74,
@@ -85,7 +141,9 @@ namespace Synth {
 			volumeControl1 = new VolumeModule(mixer1);
 			volumeControl2 = new VolumeModule(mixer2);
 			mixerAll = new MixingSampleProvider(waveFormat) { ReadFully = true };
-			delayModule = new DelayModule(mixerAll);
+			tremoloModule = new TremoloModule(mixerAll);
+			delayModule = new DelayModule(tremoloModule);
+			filterModule = new FilterModule(delayModule);
 
 			mixerAll.AddMixerInput(volumeControl1);
 			mixerAll.AddMixerInput(volumeControl2);
@@ -107,17 +165,13 @@ namespace Synth {
 
 			if (osc1Enable) {
 				ISampleProvider input1 = signals[0, keyIndex];
-				if (FilterEnable)
-					input1 = new FilterModule(input1, FilterType, Cutoff, Bandwidth);
-				
+
 				mixer1.AddMixerInput(input1);
 			}
 
 			if (osc2Enable) {
 				ISampleProvider input2 = signals[1, keyIndex];
-				if (FilterEnable)
-					input2 = new FilterModule(input2, FilterType, Cutoff, Bandwidth);
-				
+
 				mixer2.AddMixerInput(input2);
 			}
 		}
@@ -144,7 +198,7 @@ namespace Synth {
 				return;
 			
 			player = new WaveOutEvent { NumberOfBuffers = 2, DesiredLatency = 100 };
-			player.Init(new SampleToWaveProvider(delayModule));
+			player.Init(new SampleToWaveProvider(filterModule));
 			player.Play();
 		}
 

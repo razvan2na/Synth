@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Synth"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="600" ResizeMode="CanMinimize"
+        Title="MainWindow" Height="700" Width="800" ResizeMode="CanMinimize"
         KeyDown="OnKeyDown"
         KeyUp="OnKeyUp">
     <Grid>
@@ -16,6 +16,7 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
+            <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -212,7 +213,7 @@
 	                      Checked="OnFilterEnableCheck" Unchecked="OnFilterEnableUncheck"/>
 	            
 	            <ComboBox Name="ComboBoxFilterType" 
-	                      Grid.Row="1" Grid.Column="0" 
+	                      Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
 	                      SelectedIndex="0"
 	                      SelectionChanged="OnFilterTypeSelectionChange">
 		            <ComboBoxItem>LowPass</ComboBoxItem>
@@ -243,10 +244,131 @@
             </Grid>
         </GroupBox>
         
+        <!-- Delay -->
+        <GroupBox Grid.Row="0" Grid.Column="2" 
+                  Header="Delay">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+	            
+	            <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5"
+	                      Content="Enable"
+	                      Checked="OnDelayEnableCheck" Unchecked="OnDelayEnableUncheck"/>
+                
+                <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center"
+                       Content="Delay"/>
+                <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center"
+                       Content="Feedback"/>
+                <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"
+                       Content="Mix"/>
+                <Label Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center"
+                       Content="Wet"/>
+                <Label Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center"
+                       Content="Dry"/>
+                
+                <Label Name="LabelDelay"
+                       Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center"
+                       Content="-"/>
+                <Label Name="LabelFeedback"
+                       Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center"
+                       Content="-"/>
+                <Label Name="LabelMix"
+                       Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center"
+                       Content="-"/>
+                <Label Name="LabelWet"
+                       Grid.Row="3" Grid.Column="3" HorizontalAlignment="Center"
+                       Content="-"/>
+                <Label Name="LabelDry"
+                       Grid.Row="3" Grid.Column="4" HorizontalAlignment="Center"
+                       Content="-"/>
+                
+                <Slider Name="SliderDelay" 
+                        Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center"
+                        Orientation="Vertical"
+                        Minimum="1" Maximum="500" IsSnapToTickEnabled="True" TickFrequency="1" Value="1"
+                        ValueChanged="OnDelayChange"/>
+                <Slider Name="SliderFeedback" 
+                        Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center"
+                        Orientation="Vertical"
+                        Minimum="0" Maximum="0.95" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0"
+                        ValueChanged="OnFeedbackChange"/>
+                <Slider Name="SliderMix"
+                        Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"
+                        Orientation="Vertical"
+                        Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="1"
+                        ValueChanged="OnMixChange"/>
+                <Slider Name="SliderWet"
+                        Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center"
+                        Orientation="Vertical"
+                        Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0.5"
+                        ValueChanged="OnWetChange"/>
+                <Slider Name="SliderDry"
+                        Grid.Row="2" Grid.Column="4" HorizontalAlignment="Center"
+                        Orientation="Vertical"
+                        Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0.5"
+                        ValueChanged="OnDryChange"/>
+                
+            </Grid>
+        </GroupBox>
+        
+        <!-- Tremolo -->
+        <GroupBox Grid.Row="1" Grid.Column="2" 
+                  Header="Tremolo">
+            <Grid>
+	            <Grid.RowDefinitions>
+		            <RowDefinition/>
+		            <RowDefinition/>
+		            <RowDefinition/>
+	            </Grid.RowDefinitions>
+	            
+	            <Grid.ColumnDefinitions>
+		            <ColumnDefinition/>
+		            <ColumnDefinition/>
+		            <ColumnDefinition/>
+	            </Grid.ColumnDefinitions>
+	            
+	            <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+	                      Content="Enable"
+	                      Checked="OnTremoloEnableCheck" Unchecked="OnTremoloEnableUncheck"/>
+	            
+	            <Label Grid.Row="1" Grid.Column="0"
+	                   Content="Frequency"/>
+	            <Label Grid.Row="2" Grid.Column="0"
+	                   Content="Amplitude"/>
+	            
+	            <Label Name="LabelTremoloFrequency"
+	                   Grid.Row="1" Grid.Column="2"
+	                   Content="-"/>
+	            <Label Name="LabelTremoloAmplitude"
+	                   Grid.Row="2" Grid.Column="2"
+	                   Content="-"/>
+	            
+	            <Slider Name="SliderTremoloFrequency"
+						Grid.Row="1" Grid.Column="1"
+	                    Minimum="1" Maximum="10" IsSnapToTickEnabled="True" TickFrequency="1" Value="5"
+						ValueChanged="OnTremoloFrequencyChange"/>
+	            <Slider Name="SliderTremoloAmplitude"
+	                    Grid.Row="2" Grid.Column="1"
+	                    Minimum="0.01" Maximum="0.5" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0.2"
+	                    ValueChanged="OnTremoloAmplitudeChange"/>
+            </Grid>
+        </GroupBox>
+        
         <!-- Keyboard -->
         <GroupBox Grid.Row="2" 
                   Grid.Column="0" 
-                  Grid.ColumnSpan="2" 
+                  Grid.ColumnSpan="3" 
                   Header="Keyboard">
             <Grid>
 	            <!-- 3 rows -->

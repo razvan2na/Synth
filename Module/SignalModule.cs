@@ -9,18 +9,21 @@ namespace Synth.Module {
 	public class SignalModule : ISampleProvider
     {
 	    public WaveFormat WaveFormat { get; }
-	    public double Frequency { get; set; }
+	    
 	    public SignalType Type { get; set; }
+	    public double Frequency { get; set; }
+	    public double Gain { get; set; }
 
 	    private readonly double sineAngular;
 	    private readonly double angular;
 	    private int nSample;
 
-	    public SignalModule(SignalType type = SignalType.Sine, double frequency = 440f) {
+	    public SignalModule(SignalType type = SignalType.Sine, double frequency = 440f, double gain = 1f) {
 	        WaveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 1);
 
 	        Type = type;
 	        Frequency = frequency;
+	        Gain = gain;
 
 	        sineAngular = 2 * Math.PI * frequency / WaveFormat.SampleRate;
 	        angular = 2 * frequency / WaveFormat.SampleRate;
@@ -36,7 +39,7 @@ namespace Synth.Module {
 		            _ => 0
 	            };
 	            
-		        buffer[offset++] = (float) sample;
+		        buffer[offset++] = (float) (Gain * sample);
             }
             
             return count;

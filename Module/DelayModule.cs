@@ -2,154 +2,140 @@ using System;
 using NAudio.Wave;
 
 namespace Synth.Module {
-    public class DelayModule : ISampleProvider {
-        float delaypos;
-        float odelay;
-        float delaylen;
-        float wetmix;
-        float drymix;
-        float wetmix2;
-        float drymix2;
-        float rspos;
-        int rspos2;
-        float drspos;
-        int tpos;
-        float[] buffer = new float[500000];
-        private double delayMs;
-        private double feedbackDb;
-        private ISampleProvider sourceProvider;
-        private double mixInDb;
-        private double outputWetDb;
-        private double outputDryDb;
-        private bool resampleOnLengthChange;
+	public class DelayModule : ISampleProvider {
+		public WaveFormat WaveFormat => source.WaveFormat;
 
-        public DelayModule(ISampleProvider sourceProvider) {
-            this.sourceProvider = sourceProvider;
-            // AddSlider(300, 0, 4000, 20, "delay (ms)"); // slider1
-            //AddSlider(-5, -120, 6, 1, "feedback (dB)"); // slider2
-            //AddSlider(0, -120, 6, 1, "mix in (dB)"); // slider 3
-            //AddSlider(-6, -120, 6, 1, "output wet (dB)"); // slider 4
-            //AddSlider(0, -120, 6, 1, "output dry (dB)"); // slider 5
-            // Slider resampleSlider = AddSlider(0, 0, 1, 1, "resample on length change"); // slider 6
-            Init();
-            DelayMs = 300;
-            FeedbackDb = -5;
-            MixInDb = 0;
-            OutputWetDb = -6;
-            OutputDryDb = 0;
-            ResampleOnLengthChange = true;
-        }
+		public bool Enabled { get; set; }
 
-        public bool ResampleOnLengthChange {
-            get { return resampleOnLengthChange; }
-            set { resampleOnLengthChange = value; Slider(); }
-        }
+		public double DelayMs {
+			get => delayMs;
+			set { delayMs = value; delayPosition = 0; SetSlide(); }
+		}
 
-        public double DelayMs {
-            get { return delayMs; }
-            set { delayMs = value; Slider();}
-        }
+		public float Feedback {
+			get => feedback;
+			set { feedback = value; SetSlide(); }
+		}
 
-        public double FeedbackDb {
-            get { return feedbackDb; }
-            set { feedbackDb = value; Slider(); }
-        }
+		public float Mix {
+			get => mix;
+			set { mix = value; SetSlide(); }
+		}
+		
+		public float OutputWet {
+			get => outputWet;
+			set { outputWet = value; SetSlide(); }
+		}
+		
+		public float OutputDry {
+			get => outputDry;
+			set { outputDry = value; SetSlide(); }
+		}
 
-        public double MixInDb {
-            get { return mixInDb; }
-            set { mixInDb = value; Slider(); }
-        }
+		private double delayMs;
+		private float feedback;
+		private float mix;
+		private float outputWet;
+		private float outputDry;
+		
+		private readonly ISampleProvider source;
+		private float delayPosition;
+		private float delayLength;
+		private float delay;
+		private float resamplePosition;
+		private int resamplePositionInt;
+		private float delayResamplePosition;
+		private int pos;
+		private float[] delayBuffer = new float[500000];
 
-        public double OutputWetDb {
-            get { return outputWetDb; }
-            set { outputWetDb = value; Slider(); }
-        }
+		public DelayModule(ISampleProvider source, double delay = 1, float feedback = 0.5f, float mix = 0.5f,
+			float wet = 0.25f, float dry = 1f) {
+			
+			this.source = source;
+			DelayMs = delay;
+			Feedback = feedback;
+			Mix = mix;
+			OutputWet = wet;
+			OutputDry = dry;
+			
+			delayPosition = 0;
 
-        public double OutputDryDb {
-            get { return outputDryDb; }
-            set { outputDryDb = value;
-                Slider();
-            }
-        }
+			SetSlide();
+		}
 
+		public int Read(float[] buffer, int offset, int count) {
+			var samples = source.Read(buffer, offset, count);
 
-        public void Init() {
-            delaypos = 0;
-        }
+			if (!Enabled)
+				return samples;
 
-        public void Slider() {
-            odelay = delaylen;
-            delaylen = (float)Math.Min(DelayMs * WaveFormat.SampleRate / 1000, 500000);
-            if (odelay != delaylen) {
-                if (ResampleOnLengthChange && odelay > delaylen) {
-                    // resample down delay buffer, heh
-                    rspos = 0; rspos2 = 0;
-                    drspos = odelay / delaylen;
-                    for (int n = 0; n < delaylen; n++) {
-                        tpos = ((int)rspos) * 2;
-                        buffer[rspos2 + 0] = buffer[tpos + 0];
-                        buffer[rspos2 + 1] = buffer[tpos + 1];
-                        rspos2 += 2;
-                        rspos += drspos;
-                    }
-                    delaypos /= drspos;
-                    delaypos = (int)delaypos;
-                    if (delaypos < 0) delaypos = 0;
-                }
-                else
-                {
-                    if (ResampleOnLengthChange  && odelay < delaylen) {
-                        // resample up delay buffer, heh
-                        drspos = odelay / delaylen;
-                        rspos = odelay;
-                        rspos2 = (int)delaylen * 2;
-                        for (int n = 0; n < (int)delaylen; n++) {
-                            rspos -= drspos;
-                            rspos2 -= 2;
+			for (var i = 0; i < samples; i++)
+				buffer[offset + i] = Process(buffer[offset + i]);
 
-                            tpos = ((int)(rspos)) * 2;
-                            buffer[rspos2 + 0] = buffer[tpos + 0];
-                            buffer[rspos2 + 1] = buffer[tpos + 1];
-                        }
-                        delaypos /= drspos;
-                        delaypos = (int)delaypos;
-                        if (delaypos < 0) delaypos = 0;
-                    }
-                    else {
-                        if (ResampleOnLengthChange  && delaypos >= delaylen) delaypos = 0;
-                    }
-                }
-                //freembuf(delaylen*2);
-            }
-            wetmix = (float)Math.Pow(2, (FeedbackDb / 6));
-            drymix = (float)Math.Pow(2, (MixInDb / 6));
-            wetmix2 = (float)Math.Pow(2, (OutputWetDb / 6));
-            drymix2 = (float)Math.Pow(2, (OutputDryDb / 6));
-        }
+			return samples;
+		}
 
-        public float Sample(float spl0) {
-            int dpint = (int)delaypos;
-            float os1 = buffer[dpint + 0];
+		private float Process(float inputSample) {
+			var delayPositionInt = (int) delayPosition;
+			var outputSample = delayBuffer[delayPositionInt];
 
-            buffer[dpint + 0] = Math.Min(Math.Max(spl0 * drymix + os1 * wetmix, -4), 4);
+			delayBuffer[delayPositionInt + 0] = Math.Min(Math.Max((inputSample * Mix) + (outputSample * Feedback), -4), 4);
 
-            if ((delaypos += 1) >= delaylen) {
-                delaypos = 0;
-            }
+			if ((delayPosition += 1) >= delayLength)
+				delayPosition = 0;
 
-            return spl0 * drymix2 + os1 * wetmix2;
-        }
+			return (inputSample * OutputDry) + (outputSample * OutputWet);
+		}
 
-        public int Read(float[] sampleBuffer, int offset, int count) {
-            var read = sourceProvider.Read(sampleBuffer, offset, count);
-            
-            for (int n = 0; n < read; n++) {
-                sampleBuffer[offset + n] = Sample(sampleBuffer[offset + n]);
-            }
-            
-            return read;
-        }
+		private void SetSlide() {
+			delay = delayLength;
+			delayLength = (float) Math.Min((DelayMs * WaveFormat.SampleRate) / 1000, delayBuffer.Length);
 
-        public WaveFormat WaveFormat { get { return sourceProvider.WaveFormat; } }
-    }
+			if (delay == delayLength)
+				return;
+
+			if (delay > delayLength) {
+				resamplePosition = 0;
+				resamplePositionInt = 0;
+				delayResamplePosition = delay / delayLength;
+
+				for (var i = 0; i < delayLength; i++) {
+					pos = ((int) resamplePosition) * 2;
+					delayBuffer[resamplePositionInt] = delayBuffer[pos];
+					delayBuffer[resamplePositionInt + 1] = delayBuffer[pos + 1];
+					resamplePositionInt += 2;
+					resamplePosition += delayResamplePosition;
+				}
+
+				delayPosition = delayResamplePosition != 0.0f ? delayPosition / delayResamplePosition : delayPosition;
+				delayPosition = (delayPosition < 0) ? 0 : (int) delayPosition;
+			}
+			else {
+				if (delay < delayLength) {
+					delayResamplePosition = delay / delayLength;
+					resamplePosition = delay;
+					resamplePositionInt = ((int) delayLength) * 2;
+
+					for (var i = 0; i < (int) delayLength; i++) {
+						resamplePosition -= delayResamplePosition;
+						resamplePositionInt -= 2;
+
+						pos = Math.Abs(((int) resamplePosition) * 2);
+						delayBuffer[resamplePositionInt] = delayBuffer[pos];
+						delayBuffer[resamplePositionInt + 1] = delayBuffer[pos + 1];
+					}
+
+					delayPosition = delayResamplePosition != 0.0f
+						? delayPosition / delayResamplePosition
+						: delayPosition;
+					delayPosition = (delayPosition < 0) ? 0 : (int) delayPosition;
+				}
+				else {
+					if (delayPosition >= delayLength) {
+						delayPosition = 0;
+					}
+				}
+			}
+		}
+	}
 }

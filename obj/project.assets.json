@@ -312,11 +312,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Projects\\Synth\\Synth.csproj",
+      "projectUniqueName": "D:\\University\\Synth\\Synth\\Synth.csproj",
       "projectName": "Synth",
-      "projectPath": "E:\\Projects\\Synth\\Synth.csproj",
+      "projectPath": "D:\\University\\Synth\\Synth\\Synth.csproj",
       "packagesPath": "C:\\Users\\razva\\.nuget\\packages\\",
-      "outputPath": "E:\\Projects\\Synth\\obj\\",
+      "outputPath": "D:\\University\\Synth\\Synth\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\razva\\AppData\\Roaming\\NuGet\\NuGet.Config",

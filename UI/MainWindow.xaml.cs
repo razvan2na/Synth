@@ -116,7 +116,7 @@ namespace Synth {
 			controller.Release = (float) SliderRelease.Value;
 			LabelRelease.Content = $"{(int)(controller.Release * 1000)}ms";
 		}
-		
+
 		private void OnFilterEnableCheck(object sender, RoutedEventArgs e) {
 			controller.FilterEnable = true;
 		}
@@ -130,6 +130,14 @@ namespace Synth {
 			var content = selectedItem?.Content.ToString();
 			controller.FilterType = (FilterType) Enum.Parse(typeof(FilterType), content ?? "LowPass");
 		}
+		
+		private void OnDelayEnableCheck(object sender, RoutedEventArgs e) {
+			controller.DelayEnable = true;
+		}
+		
+		private void OnDelayEnableUncheck(object sender, RoutedEventArgs e) {
+			controller.DelayEnable = false;
+		}
 
 		private void OnCutoffChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
 			controller.Cutoff = (int) SliderFilterCutoff.Value;
@@ -139,6 +147,49 @@ namespace Synth {
 		private void OnBandwidthChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
 			controller.Bandwidth = (float) SliderFilterBandwidth.Value;
 			LabelFilterBandwidth.Content = $"{controller.Bandwidth}";
+		}
+		
+		private void OnDelayChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Delay = SliderDelay.Value;
+			LabelDelay.Content = $"{(int) (controller.Delay)}ms";
+		}
+		
+		private void OnFeedbackChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Feedback = (float) SliderFeedback.Value;
+			LabelFeedback.Content = $"{controller.Feedback}";
+		}
+		
+		private void OnMixChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Mix = (float) SliderMix.Value;
+			LabelMix.Content = $"{controller.Mix}";
+		}
+		
+		private void OnWetChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Wet = (float) SliderWet.Value;
+			LabelWet.Content = $"{controller.Wet}";
+		}
+		
+		private void OnDryChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.Dry = (float) SliderDry.Value;
+			LabelDry.Content = $"{controller.Dry}";
+		}
+		
+		private void OnTremoloEnableCheck(object sender, RoutedEventArgs e) {
+			controller.TremoloEnable = true;
+		}
+		
+		private void OnTremoloEnableUncheck(object sender, RoutedEventArgs e) {
+			controller.TremoloEnable = false;
+		}
+		
+		private void OnTremoloFrequencyChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.TremoloFrequency = (int) SliderTremoloFrequency.Value;
+			LabelTremoloFrequency.Content = $"{controller.TremoloFrequency}";
+		}
+		
+		private void OnTremoloAmplitudeChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.TremoloAmplitude = (float) SliderTremoloAmplitude.Value;
+			LabelTremoloAmplitude.Content = $"{controller.TremoloAmplitude}";
 		}
 	}
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "r2SP/j/pjl8So0HkEQa9qSUGYfwrdQWbG+XWndrgC0vlp9xYfNo7i+VmXrX9tu/9qx7rd5j+yCFZLh7xODwZFw==",
+  "dgSpecHash": "8O4INlA2g7qEK3qLlNAz0dvMzuwnVhRtVOso4jxIEqeTIMHt10RkkKCbCe8kzyMpBO/beivwpvxudCTIeF12jA==",
   "success": true,
-  "projectFilePath": "E:\\Projects\\Synth\\Synth.csproj",
+  "projectFilePath": "D:\\University\\Synth\\Synth\\Synth.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\razva\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\razva\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
