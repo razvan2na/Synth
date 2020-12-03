@@ -4,11 +4,11 @@ namespace Synth.Filter {
     }
 
     public abstract class Filter {
-        protected double A0;
+        protected double B0;
+        protected double B1;
+        protected double B2;
         protected double A1;
         protected double A2;
-        protected double A3;
-        protected double A4;
 
         private float x1;
         private float x2;
@@ -16,7 +16,7 @@ namespace Synth.Filter {
         private float y2;
 
         public float Process(float sample) {
-            var result = A0 * sample + A1 * x1 + A2 * x2 - A3 * y1 - A4 * y2;
+            var result = B0 * sample + B1 * x1 + B2 * x2 - A1 * y1 - A2 * y2;
             
             x2 = x1;
             x1 = sample;

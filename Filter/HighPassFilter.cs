@@ -10,15 +10,15 @@ namespace Synth.Filter {
             var b0 = (1 + cosw0) / 2;
             var b1 = -(1 + cosw0);
             var b2 = (1 + cosw0) / 2;
-            var aa0 = 1 + alpha;
-            var aa1 = -2 * cosw0;
-            var aa2 = 1 - alpha;
+            var a0 = 1 + alpha;
+            var a1 = -2 * cosw0;
+            var a2 = 1 - alpha;
             
-            A0 = b0 / aa0;
-            A1 = b1 / aa0;
-            A2 = b2 / aa0;
-            A3 = aa1 / aa0;
-            A4 = aa2 / aa0;
+            B0 = b0 / a0;
+            B1 = b1 / a0;
+            B2 = b2 / a0;
+            A1 = a1 / a0;
+            A2 = a2 / a0;
         }
     }
 }

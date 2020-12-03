@@ -134,7 +134,7 @@ namespace Synth {
 		};
 
 		public Controller() {
-			var waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 1);
+			var waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
 			signals = new EnvelopeModule[2, 88];
 			mixer1 = new MixingSampleProvider(waveFormat) { ReadFully = true };
 			mixer2 = new MixingSampleProvider(waveFormat) { ReadFully = true };
@@ -147,9 +147,6 @@ namespace Synth {
 
 			mixerAll.AddMixerInput(volumeControl1);
 			mixerAll.AddMixerInput(volumeControl2);
-
-			Osc1Volume = 0.25f;
-			Osc2Volume = 0.25f;
 		}
 
 		public void NoteDown(int keyIndex1, int keyIndex2) {

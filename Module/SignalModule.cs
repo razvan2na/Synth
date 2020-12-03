@@ -19,7 +19,7 @@ namespace Synth.Module {
 	    private int nSample;
 
 	    public SignalModule(SignalType type = SignalType.Sine, double frequency = 440f, double gain = 1f) {
-	        WaveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 1);
+	        WaveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
 
 	        Type = type;
 	        Frequency = frequency;
@@ -39,7 +39,8 @@ namespace Synth.Module {
 		            _ => 0
 	            };
 	            
-		        buffer[offset++] = (float) (Gain * sample);
+	            for (var channel = 0; channel < WaveFormat.Channels; channel++)
+		            buffer[offset++] = (float) (Gain * sample);
             }
             
             return count;
