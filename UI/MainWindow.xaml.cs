@@ -6,7 +6,7 @@ using System.Windows.Input;
 using Synth.Filter;
 using Synth.Module;
 
-namespace Synth {
+namespace Synth.UI {
 	public partial class MainWindow : Window {
 		private readonly Controller controller;
 

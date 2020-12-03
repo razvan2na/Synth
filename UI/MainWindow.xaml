@@ -1,4 +1,4 @@
-﻿<Window x:Class="Synth.MainWindow"
+﻿<Window x:Class="Synth.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -303,27 +303,27 @@
                 <Slider Name="SliderDelay" 
                         Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center"
                         Orientation="Vertical"
-                        Minimum="1" Maximum="500" IsSnapToTickEnabled="True" TickFrequency="1" Value="1"
+                        Minimum="0" Maximum="500" IsSnapToTickEnabled="True" TickFrequency="1" Value="0"
                         ValueChanged="OnDelayChange"/>
                 <Slider Name="SliderFeedback" 
                         Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center"
                         Orientation="Vertical"
-                        Minimum="0" Maximum="0.95" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0"
+                        Minimum="0" Maximum="0.95" IsSnapToTickEnabled="True" TickFrequency="0.05" Value="0.6"
                         ValueChanged="OnFeedbackChange"/>
                 <Slider Name="SliderMix"
                         Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"
                         Orientation="Vertical"
-                        Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="1"
+                        Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.1" Value="1"
                         ValueChanged="OnMixChange"/>
                 <Slider Name="SliderWet"
                         Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center"
                         Orientation="Vertical"
-                        Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0.5"
+                        Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.1" Value="0.5"
                         ValueChanged="OnWetChange"/>
                 <Slider Name="SliderDry"
                         Grid.Row="2" Grid.Column="4" HorizontalAlignment="Center"
                         Orientation="Vertical"
-                        Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Value="0.5"
+                        Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.1" Value="1"
                         ValueChanged="OnDryChange"/>
                 
             </Grid>
