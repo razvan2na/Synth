@@ -9,27 +9,27 @@ namespace Synth.Module {
 
 		public double DelayMs {
 			get => delayMs;
-			set { delayMs = value; delayPosition = 0; SetSlide(); }
+			set { delayMs = value; delayPosition = 0; Reslide(); }
 		}
 
 		public float Feedback {
 			get => feedback;
-			set { feedback = value; SetSlide(); }
+			set { feedback = value; Reslide(); }
 		}
 
 		public float Mix {
 			get => mix;
-			set { mix = value; SetSlide(); }
+			set { mix = value; Reslide(); }
 		}
 		
 		public float OutputWet {
 			get => outputWet;
-			set { outputWet = value; SetSlide(); }
+			set { outputWet = value; Reslide(); }
 		}
 		
 		public float OutputDry {
 			get => outputDry;
-			set { outputDry = value; SetSlide(); }
+			set { outputDry = value; Reslide(); }
 		}
 
 		private double delayMs;
@@ -60,7 +60,7 @@ namespace Synth.Module {
 			
 			delayPosition = 0;
 
-			SetSlide();
+			Reslide();
 		}
 
 		public int Read(float[] buffer, int offset, int count) {
@@ -79,15 +79,15 @@ namespace Synth.Module {
 			var delayPositionInt = (int) delayPosition;
 			var outputSample = delayBuffer[delayPositionInt];
 
-			delayBuffer[delayPositionInt + 0] = Math.Min(Math.Max((inputSample * Mix) + (outputSample * Feedback), -4), 4);
+			delayBuffer[delayPositionInt] = Math.Min(Math.Max(inputSample * Mix + outputSample * Feedback, -4), 4);
 
 			if ((delayPosition += 1) >= delayLength)
 				delayPosition = 0;
 
-			return (inputSample * OutputDry) + (outputSample * OutputWet);
+			return inputSample * OutputDry + outputSample * OutputWet;
 		}
 
-		private void SetSlide() {
+		private void Reslide() {
 			delay = delayLength;
 			delayLength = (float) Math.Min((DelayMs * WaveFormat.SampleRate) / 1000, delayBuffer.Length);
 
@@ -100,7 +100,7 @@ namespace Synth.Module {
 				delayResamplePosition = delay / delayLength;
 
 				for (var i = 0; i < delayLength; i++) {
-					pos = ((int) resamplePosition) * 2;
+					pos = (int) resamplePosition * 2;
 					delayBuffer[resamplePositionInt] = delayBuffer[pos];
 					delayBuffer[resamplePositionInt + 1] = delayBuffer[pos + 1];
 					resamplePositionInt += 2;
@@ -110,31 +110,22 @@ namespace Synth.Module {
 				delayPosition = delayResamplePosition != 0.0f ? delayPosition / delayResamplePosition : delayPosition;
 				delayPosition = (delayPosition < 0) ? 0 : (int) delayPosition;
 			}
-			else {
-				if (delay < delayLength) {
-					delayResamplePosition = delay / delayLength;
-					resamplePosition = delay;
-					resamplePositionInt = ((int) delayLength) * 2;
+			else if (delay < delayLength) {
+				delayResamplePosition = delay / delayLength;
+				resamplePosition = delay;
+				resamplePositionInt = (int) delayLength * 2;
 
-					for (var i = 0; i < (int) delayLength; i++) {
-						resamplePosition -= delayResamplePosition;
-						resamplePositionInt -= 2;
+				for (var i = 0; i < (int) delayLength; i++) {
+					resamplePosition -= delayResamplePosition;
+					resamplePositionInt -= 2;
 
-						pos = Math.Abs(((int) resamplePosition) * 2);
-						delayBuffer[resamplePositionInt] = delayBuffer[pos];
-						delayBuffer[resamplePositionInt + 1] = delayBuffer[pos + 1];
-					}
-
-					delayPosition = delayResamplePosition != 0.0f
-						? delayPosition / delayResamplePosition
-						: delayPosition;
-					delayPosition = (delayPosition < 0) ? 0 : (int) delayPosition;
+					pos = Math.Abs((int) resamplePosition * 2);
+					delayBuffer[resamplePositionInt] = delayBuffer[pos];
+					delayBuffer[resamplePositionInt + 1] = delayBuffer[pos + 1];
 				}
-				else {
-					if (delayPosition >= delayLength) {
-						delayPosition = 0;
-					}
-				}
+
+				delayPosition = delayResamplePosition != 0.0f ? delayPosition / delayResamplePosition : delayPosition;
+				delayPosition = (delayPosition < 0) ? 0 : (int) delayPosition;
 			}
 		}
 	}
