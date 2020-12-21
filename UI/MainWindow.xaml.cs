@@ -31,16 +31,18 @@ namespace Synth.UI {
 		
 		private void OnKeyDown(object sender, KeyEventArgs e) {
 			var keyIndex = keyboard.IndexOf(e.Key);
-			controller.NoteDown(
-				keyIndex + ((int) SliderOsc1Octave.Value + 2) * 12 + 3,
-				keyIndex + ((int) SliderOsc2Octave.Value + 2) * 12 + 3);
+			if (keyIndex != -1)
+				controller.NoteDown(
+					keyIndex + ((int) SliderOsc1Octave.Value + 2) * 12 + 3,
+					keyIndex + ((int) SliderOsc2Octave.Value + 2) * 12 + 3);
 		}
 
 		private void OnKeyUp(object sender, KeyEventArgs e) {
 			var keyIndex = keyboard.IndexOf(e.Key);
-			controller.NoteUp(
-				keyIndex + ((int) SliderOsc1Octave.Value + 2) * 12 + 3,
-				keyIndex + ((int) SliderOsc2Octave.Value + 2) * 12 + 3);
+			if (keyIndex != -1)
+				controller.NoteUp(
+					keyIndex + ((int) SliderOsc1Octave.Value + 2) * 12 + 3,
+					keyIndex + ((int) SliderOsc2Octave.Value + 2) * 12 + 3);
 		}
 		
 		private void OnScreenKeyDown(object sender, MouseButtonEventArgs e) {
