@@ -18,7 +18,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.75*"/>
+            <ColumnDefinition Width="0.75*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -132,7 +133,7 @@
         </GroupBox>
         
         <!-- Envelope -->
-        <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+        <GroupBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" 
                   Header="Envelope">
             <Grid>
                 <Grid.RowDefinitions>
@@ -193,7 +194,7 @@
         </GroupBox>
         
         <!-- Filter -->
-        <GroupBox Grid.Row="0" Grid.Column="2" 
+        <GroupBox Grid.Row="1" Grid.Column="4" 
                   Header="Filter">
             <Grid>
 	            <Grid.RowDefinitions>
@@ -252,7 +253,7 @@
         </GroupBox>
         
         <!-- Delay -->
-        <GroupBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" 
+        <GroupBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" 
                   Header="Delay">
             <Grid>
                 <Grid.RowDefinitions>
@@ -330,7 +331,7 @@
         </GroupBox>
         
         <!-- Tremolo -->
-        <GroupBox Grid.Row="0" Grid.Column="3" 
+        <GroupBox Grid.Row="1" Grid.Column="0" 
                   Header="Tremolo">
             <Grid>
 	            <Grid.RowDefinitions>
@@ -378,10 +379,59 @@
             </Grid>
         </GroupBox>
         
+        <!-- Distortion -->
+        <GroupBox Grid.Row="0" Grid.Column="4" 
+                  Header="Distortion">
+            <Grid>
+	            <Grid.RowDefinitions>
+		            <RowDefinition Height="*"/>
+		            <RowDefinition Height="*"/>
+		            <RowDefinition Height="4*"/>
+		            <RowDefinition Height="*"/>
+	            </Grid.RowDefinitions>
+	            
+	            <Grid.ColumnDefinitions>
+		            <ColumnDefinition Width="*"/>
+		            <ColumnDefinition Width="*"/>
+	            </Grid.ColumnDefinitions>
+	            
+	            <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+	                      Content="Enable"
+	                      Checked="OnDistortEnableCheck" Unchecked="OnDistortEnableUncheck"/>
+	            
+	            <Label Grid.Row="1" Grid.Column="0"
+	                   HorizontalAlignment="Center"
+	                   Content="Amount"/>
+	            <Label Grid.Row="1" Grid.Column="1"
+	                   HorizontalAlignment="Center"
+	                   Content="Mix"/>
+	            
+	            <Label Name="LabelDistortAmount"
+	                   Grid.Row="3" Grid.Column="0"
+	                   HorizontalAlignment="Center"
+	                   Content="-"/>
+	            <Label Name="LabelDistortMix"
+	                   Grid.Row="3" Grid.Column="1"
+	                   HorizontalAlignment="Center"
+	                   Content="-"/>
+	            
+	            <Slider Name="SliderDistortAmount"
+						Grid.Row="2" Grid.Column="0"
+						HorizontalAlignment="Center" Orientation="Vertical"
+	                    Minimum="1" Maximum="10" IsSnapToTickEnabled="True" TickFrequency="0.1" Value="2"
+						ValueChanged="OnDistortAmountChange"/>
+	            <Slider Name="SliderDistortMix"
+	                    Grid.Row="2" Grid.Column="1"
+	                    HorizontalAlignment="Center" Orientation="Vertical"
+	                    Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.1" Value="1"
+	                    ValueChanged="OnDistortMixChange"/>
+            </Grid>
+        </GroupBox>
+        
         <!-- Keyboard -->
         <GroupBox Grid.Row="2" 
                   Grid.Column="0" 
-                  Grid.ColumnSpan="4" 
+                  Grid.ColumnSpan="5" 
                   Header="Keyboard">
             <Grid>
 	            <!-- 3 rows -->

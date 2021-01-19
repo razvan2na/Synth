@@ -199,5 +199,23 @@ namespace Synth.UI {
 			controller.TremoloAmplitude = (float) SliderTremoloAmplitude.Value;
 			LabelTremoloAmplitude.Content = $"{controller.TremoloAmplitude}";
 		}
+		
+		private void OnDistortEnableCheck(object sender, RoutedEventArgs e) {
+			controller.DistortEnable = true;
+		}
+		
+		private void OnDistortEnableUncheck(object sender, RoutedEventArgs e) {
+			controller.DistortEnable = false;
+		}
+		
+		private void OnDistortAmountChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.DistortAmount = (int) SliderDistortAmount.Value;
+			LabelDistortAmount.Content = $"{controller.DistortAmount}";
+		}
+		
+		private void OnDistortMixChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			controller.DistortMix = (float) SliderDistortMix.Value;
+			LabelDistortMix.Content = $"{controller.DistortMix}";
+		}
 	}
 }

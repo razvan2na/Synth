@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using Synth.Filter;
@@ -25,6 +26,11 @@ namespace Synth {
 			set => filterModule.Enabled = value;
 		}
 
+		public bool DistortEnable {
+			get => distortionModule?.Enabled ?? false;
+			set => distortionModule.Enabled = value;
+		}
+
 		public bool TremoloEnable {
 			get => tremoloModule?.Enabled ?? false;
 			set => tremoloModule.Enabled = value;
@@ -37,12 +43,18 @@ namespace Synth {
 		
 		public float Osc1Volume {
 			get => volumeControl1?.Volume ?? 0.25f;
-			set => volumeControl1.Volume = value;
+			set {
+				volumeControl1.Volume = value;
+				distortionModule.MaxAmplitude = Math.Max(Osc1Volume, Osc2Volume);
+			}
 		}
 
 		public float Osc2Volume {
 			get => volumeControl2?.Volume ?? 0.25f;
-			set => volumeControl2.Volume = value;
+			set {
+				volumeControl2.Volume = value;
+				distortionModule.MaxAmplitude = Math.Max(Osc1Volume, Osc2Volume);
+			}
 		}
 
 		public SignalType Osc1Waveform { get; set; } = SignalType.Sine;
@@ -74,6 +86,16 @@ namespace Synth {
 		public float Bandwidth {
 			get => filterModule?.Bandwidth ?? 0.5f;
 			set => filterModule.Bandwidth = value;
+		}
+
+		public float DistortAmount {
+			get => distortionModule?.Amount ?? 2f;
+			set => distortionModule.Amount = value;
+		}
+
+		public float DistortMix {
+			get => distortionModule?.Mix ?? 1f;
+			set => distortionModule.Mix = value;
 		}
 
 		public int TremoloFrequency {
@@ -116,6 +138,7 @@ namespace Synth {
 		private readonly VolumeModule volumeControl1;
 		private readonly VolumeModule volumeControl2;
 		private readonly MixingSampleProvider mixerAll;
+		private readonly DistortionModule distortionModule;
 		private readonly TremoloModule tremoloModule;
 		private readonly DelayModule delayModule;
 		private readonly FilterModule filterModule;
@@ -141,10 +164,10 @@ namespace Synth {
 			volumeControl1 = new VolumeModule(mixer1);
 			volumeControl2 = new VolumeModule(mixer2);
 			mixerAll = new MixingSampleProvider(waveFormat) { ReadFully = true };
-			tremoloModule = new TremoloModule(mixerAll);
+			distortionModule = new DistortionModule(mixerAll);
+			tremoloModule = new TremoloModule(distortionModule);
 			delayModule = new DelayModule(tremoloModule);
 			filterModule = new FilterModule(delayModule);
-
 			mixerAll.AddMixerInput(volumeControl1);
 			mixerAll.AddMixerInput(volumeControl2);
 		}
